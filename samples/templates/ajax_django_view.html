@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}
+    OMDB AJAX - jQuery
+{% endblock title %}
+{% block content %}
+    <div class="container">
+
+        <h1 class="my-4">OMDB Movies
+            <small>jQuery</small>
+        </h1>
+
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+            <form id="movie-form">
+                <div class="form-row">
+                    <div class="col-12 col-md-9 mb-2 mb-md-0">
+                        <input type="text" id="title-search" class="form-control form-control-lg"
+                               placeholder="Search movie by title...">
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <button type="submit" class="btn btn-block btn-lg btn-primary">Search!</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <br>
+
+        <div class="row" id="movie-result"></div>
+
+    </div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+        $(document).ready(
+            $('#movie-form').submit(function (event) {
+                event.preventDefault();
+
+                const movieTitle = $('#title-search').val();
+                $.ajax({
+                    method: 'GET',
+                    data: {
+                      'query': movieTitle
+                    },
+                    url: "/movies/response/",
+                    success: function (result) {
+                        let movieRow = $('#movie-result');
+                        movieRow.empty();
+                        const resultList = result.Search;
+                        for (let i = 0; i < resultList.length; i++) {
+                            movieRow.append(
+                                "<div class='col-lg-4 col-sm-6 mb-4'>" +
+                                "<div class='card h-100'>" +
+                                "<img class='card-img-top' src=" + resultList[i].Poster + ">" +
+                                "<div class='card-body'>" +
+                                "<h4 class='card-title>" + resultList[i].Title + "</h4>" +
+                                "<p class='card-text'>Year Released: " + resultList[i].Year + "</p>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>"
+                            );
+                        }
+                    }
+                });
+            })
+        );
+    </script>
+{% endblock script %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}
+    OMDB AJAX - Vanilla JavaScript
+{% endblock title %}
+{% block content %}
+    <div class="container">
+
+    <h1 class="my-4">OMDB Movies
+        <small>Vanilla JavaScript</small>
+    </h1>
+
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form id="movie-form" onsubmit="event.preventDefault(); loadMovie()">
+            <div class="form-row">
+                <div class="col-12 col-md-9 mb-2 mb-md-0">
+                    <input type="text" id="title-search" class="form-control form-control-lg"
+                           placeholder="Search movie by title...">
+                </div>
+                <div class="col-12 col-md-3">
+                    <button type="submit" class="btn btn-block btn-lg btn-primary">Search!</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <br>
+
+    <div class="row" id="movie-result"></div>
+
+    </div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script>
+        function loadMovie() {
+            let movieRow = document.getElementById('movie-result');
+            movieRow.innerHTML = "";
+            const movieTitle = document.getElementById("title-search").value;
+            const xHttp = new XMLHttpRequest();
+            xHttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    const jsonResponse = JSON.parse(this.responseText);
+                    const resultList = jsonResponse.Search;
+
+                    for (let i = 0; i < resultList.length; i++) {
+                        movieRow.innerHTML +=
+                            "<div class='col-lg-4 col-sm-6 mb-4'>" +
+                            "<div class='card h-100'>" +
+                            "<img class='card-img-top' src=" + resultList[i].Poster + ">" +
+                            "<div class='card-body'>" +
+                            "<h4 class='card-title>" + resultList[i].Title + "</h4>" +
+                            "<p class='card-text'>Year Released: " + resultList[i].Year + "</p>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>";
+                    }
+                }
+            };
+
+            // Ganti API KEY dengan key pribadi
+            xHttp.open('GET', 'http://omdbapi.com/?apikey=449e4a6b' + "&s=" + movieTitle);
+            xHttp.send();
+        }
+    </script>
+{% endblock script %}
