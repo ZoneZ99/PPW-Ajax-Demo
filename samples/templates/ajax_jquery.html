@@ -41,7 +41,7 @@
                 $.ajax({
                     method: 'GET',
                     // Ganti API KEY dengan key pribadi
-                    url: "http://omdbapi.com/?apikey=449e4a6b" + "&s=" + movieTitle,
+                    url: "https://omdbapi.com/?apikey=449e4a6b" + "&s=" + movieTitle,
                     success: function (result) {
                         let movieRow = $('#movie-result');
                         movieRow.empty();
